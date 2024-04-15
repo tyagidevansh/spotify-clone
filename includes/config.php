@@ -1,5 +1,6 @@
 <?php
     ob_start();
+    session_start();
 
         // Load environment variables from .env file
     $envFile = __DIR__ . '/.env';
