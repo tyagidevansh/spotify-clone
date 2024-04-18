@@ -1,3 +1,54 @@
+<?php
+$songQuery = mysqli_query($con, "SELECT id FROM songs ORDER by RAND() LIMIT 10");
+
+$resultArray = array();
+
+while ($row = mysqli_fetch_array($songQuery)) {
+    array_push($resultArray, $row['id']);
+}
+
+$jsonArray = json_encode($resultArray);
+?>
+
+<script>
+    $(document).ready(function() {
+        currentPlaylist = <?php echo $jsonArray?>;
+        audioElement = new Audio();
+        setTrack(currentPlaylist[0], currentPlaylist, false);
+    });
+
+    function setTrack(trackId, newPlaylist, play) {
+        audioElement.setTrack("assets/music/bensound-acousticbreeze.mp3");
+        
+        if (play) {
+            audioElement.audio.play();
+        }
+    }
+
+    function playSong() {
+        togglePlayPause();
+        audioElement.play();
+    }
+
+    function pauseSong() {
+        togglePlayPause();
+        audioElement.pause();
+    }
+
+    function togglePlayPause() {
+        var playButton = document.querySelector('.controlButton.play');
+        var pauseButton = document.querySelector('.controlButton.pause');
+
+        if (playButton.style.display !== 'none') {
+            playButton.style.display = 'none';
+            pauseButton.style.display = 'inline-block';
+        } else {
+            playButton.style.display = 'inline-block';
+            pauseButton.style.display = 'none';
+        }
+    }
+</script>
+
 <div id = "nowPlayingBarContainer">
         
     <div id = "nowPlayingBar">
@@ -36,27 +87,16 @@
                         <img src="assets/images/icons/previous.png" alt="Previous song">
                     </button>
 
-                    <button class="controlButton play" title="Play button" onclick="togglePlayPause()">
+                    <button class="controlButton play" title="Play button" onclick="playSong()">
                         <img src="assets/images/icons/play.png" alt="Play">
                     </button>
 
-                    <button class="controlButton pause" title="Pause button" style="display: none;" onclick="togglePlayPause()">
+                    <button class="controlButton pause" title="Pause button" style="display: none;" onclick="pauseSong()">
                         <img src="assets/images/icons/pause.png" alt="Pause">
                     </button>
 
                     <script>
-                        function togglePlayPause() {
-                            var playButton = document.querySelector('.controlButton.play');
-                            var pauseButton = document.querySelector('.controlButton.pause');
-
-                            if (playButton.style.display !== 'none') {
-                                playButton.style.display = 'none';
-                                pauseButton.style.display = 'inline-block';
-                            } else {
-                                playButton.style.display = 'inline-block';
-                                pauseButton.style.display = 'none';
-                            }
-                        }
+                        
                     </script>
 
                     <button class = "controlButton next" title = "Next button">
