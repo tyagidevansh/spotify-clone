@@ -18,7 +18,23 @@ $jsonArray = json_encode($resultArray);
     });
 
     function setTrack(trackId, newPlaylist, play) {
-        audioElement.setTrack("assets/music/bensound-acousticbreeze.mp3");
+        $.post("includes/handlers/ajax/getSongjson.php", {songId: trackId}, function(data) {
+            var track = JSON.parse(data);
+            
+            $(".trackName span").text(track.title);
+
+            $.post("includes/handlers/ajax/getArtistjson.php", {artistId: track.artist}, function(data) {
+                var artist = JSON.parse(data);
+                $(".artistName span").text(artist.name);
+            });
+
+            $.post("includes/handlers/ajax/getAlbumjson.php", {albumId: track.album}, function(data) {
+                var album = JSON.parse(data);
+                $(".albumLink img").attr("src", album.artworkPath);
+            });
+
+            audioElement.setTrack(track .path);
+        });
         
         if (play) {
             audioElement.audio.play();
@@ -56,16 +72,16 @@ $jsonArray = json_encode($resultArray);
         <div id = "nowPlayingLeft">
             <div class = "content">
             <span class = "albumLink">
-                    <img src="assets\images\Minecraft_–_Volume_Alpha.jpeg" class = "albumArtwork" alt="Album artwork">
+                    <img src="" class = "albumArtwork" alt="Album artwork">
             </span> 
 
             <div class = "trackInfo">
                     <span class = "trackName">
-                        <span>"Song"</span>
+                        <span></span>
                     </span>
 
                     <span class = "artistName">
-                        <span>Devansh Tyagi</span>
+                        <span></span>
                     </span>
         
             </div>
