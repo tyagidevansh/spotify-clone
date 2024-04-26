@@ -1,25 +1,34 @@
 <?php
 include("includes/includedFiles.php");
 
-if (isset($_GET['id'])) {
-    $artistId = $_GET['id'];
+if(isset($_GET['term'])) {
+    $term = $_GET['term'];
 } else {
-    header("Location: index.php");
+    $term = "";
 }
-$artist = new Artist($con, $artistId);
 ?>
 
-<div class = "entityInfo">
-    <div class = "centerSection">
-        <div class = "artistInfo"> 
-            <h1 class = "artistName"><?php echo $artist->getName() ?></h1>
-            <div class = "headerButtons">
-                <button class = "button green" onclick = "playFirstSong()">Play</button>
-            </div>
-            
-        </div>
-    </div>
+<div class = "searchContainer">
+    <h4>Search for an artist, album or song</h4>
+    <input type="text" class= "searchInput" value = " " onfocus = "this.value = this.value">
 </div>
+
+<script>
+    $(".searchInput").focus();
+
+    $(function() {
+        var timer;
+
+        $(".searchInput").keyup(function() {
+            clearTimeout(timer);
+
+            timer = setTimeout(() => {
+                var val = $(".searchInput").val();
+                openPage("search.php?term=" + val);
+            }, 2000);
+        })
+    })
+</script>
 
 <div class = "trackListContainer">
     <div class = "borderBottom"></div>
@@ -27,15 +36,23 @@ $artist = new Artist($con, $artistId);
     
     <ul class = "trackList">
         <?php 
-        $songIdArray = $artist->getSongIds();
+        $songsQuery = mysqli_query($con, "SELECT id FROM songs WHERE title LIKE '$term%' LIMIT 10");
+        
+        if (mysqli_num_rows($songsQuery) == 0) {
+            echo "<span class = 'noResults'>No songs found matching " . $term ."</span>";
+        }
+
+        $songIdArray = array();
 
         $i = 1;
-        foreach($songIdArray as $songId) {
-            if ($i > 5) {
+        while ($row = mysqli_fetch_array($songsQuery)) {
+            if ($i > 15) {
                 break;
             }
 
-            $albumSong = new Song($con, $songId);
+            array_push($songIdArray, $row['id']);
+
+            $albumSong = new Song($con, $row['id']);
             $albumArtist = $albumSong->getArtist();
             echo "<li class = 'trackListRow'>
                 <div class = 'trackCount'>
@@ -57,8 +74,6 @@ $artist = new Artist($con, $artistId);
                 </div>
 
             </li>";
-
-            
             
             $i++;
         }

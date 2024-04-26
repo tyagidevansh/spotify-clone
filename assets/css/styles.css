@@ -371,6 +371,7 @@ body {
     font-weight: 500;
     letter-spacing: 2px;
     border: 2px solid #fff;
+    border-radius: 500px;
     padding: 15px;
     min-width: 130px;
 }
@@ -378,4 +379,42 @@ body {
 .button.green {
     background-color: #2ebd59;
     border-color: #2ebd59;
+}
+
+.borderBottom {
+    border-bottom: 1px solid #939393;
+    margin-bottom: 20px;
+}
+
+.trackListContainer h2,
+.gridViewContainer h2 {
+    text-align: center;
+}
+
+[role="link"] {
+    cursor: pointer;
+}
+
+.searchContainer {
+    background-color: #242424;
+    padding: 28px 28px;
+}
+
+.searchContainer h4 {
+    margin: 0;
+    font-weight: 300;
+}
+
+.searchcontainer .searchInput {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    font-weight: 500;
+    font-size: 42px;
+    letter-spacing: 1px;
+}
+
+input:focus {
+    outline: none;
 }
